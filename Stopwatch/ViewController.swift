@@ -8,8 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-    
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var timer = Timer()
     var hours: Int = 0
@@ -19,16 +18,52 @@ class ViewController: UIViewController {
     
     var timeElapsed: Int = 0
     
+    var times: [String] = []
+    
+    var lapCount: Int = 0
+    
     
     @IBOutlet weak var clockLabel: UILabel!
+    @IBOutlet weak var tableView: UITableView!
     
   
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellIdentifier")
+        tableView.delegate = self
+        tableView.dataSource = self
+        
         
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return times.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellIdentifier", for: indexPath)
+        cell.textLabel?.text = times[indexPath.row]
+        cell.textLabel?.textColor = UIColor.white
+        cell.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+    
+        return cell
+    }
 
+
+    @IBAction func lapButtonPressed(_ sender: UIButton) {
+        
+        lapCount += 1
+        times.append("Lap " + String(lapCount) +
+        "                              " + clockLabel.text!)
+        
+        
+        tableView.reloadData()
+    }
+    
+    
     @IBAction func startButtonPressed(_ sender: UIButton) {
         
         //creates the timer and fires the timer when the start button is pressed
